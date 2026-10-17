@@ -1,0 +1,6 @@
+# Keep the build context small.  tools/ and docker-entrypoint.sh must stay IN
+# (the Dockerfile COPYs them); only this repo's own metadata is excluded.
+.git
+.github
+*.md
+Dockerfile
