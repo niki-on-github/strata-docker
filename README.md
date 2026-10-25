@@ -18,14 +18,14 @@ container start downloads the model and serves; it never compiles.
 
 A daily cron (this repo, "Build and publish Docker image") resolves upstream's
 newest tag and builds and pushes **both** architectures to GHCR as
-`ghcr.io/<owner>/<repo>:<arch>-<upstream-tag>` (e.g. `sm80-v0.1.45`) and
+`ghcr.io/<owner>/<repo>:<arch>-<upstream-tag>` (e.g. `sm80-v0.2.5`) and
 `:<arch>-latest`; every run rebuilds both, and each job prints the image's
 digest in its summary (pin that digest where you deploy). Manual runs and pushes
 to `main` build too.
 
 | Input (`workflow_dispatch`) | Default | Meaning |
 |---|---|---|
-| `strata_ref` | newest upstream tag | upstream ref/tag to build (must be `v0.1.45` or newer) |
+| `strata_ref` | newest upstream tag | upstream ref/tag to build (must be `v0.2.5` or newer) |
 
 ## Run
 
@@ -99,8 +99,8 @@ Extra arguments after the image name go to the server:
 ## Build another arch
 
 ```sh
-docker build --build-arg STRATA_REF=v0.1.45 --build-arg CUDA_ARCHITECTURES=80 -t strata:sm80 .
-docker build --build-arg STRATA_REF=v0.1.45 --build-arg CUDA_ARCHITECTURES=61 \
+docker build --build-arg STRATA_REF=v0.2.5 --build-arg CUDA_ARCHITECTURES=80 -t strata:sm80 .
+docker build --build-arg STRATA_REF=v0.2.5 --build-arg CUDA_ARCHITECTURES=61 \
   --build-arg CUDA_BASE=12.9.1-devel-ubuntu24.04 -t strata:sm61 .
 docker build --build-arg CUDA_ARCHITECTURES=89 --build-arg CUDA_BASE=12.9.1-devel-ubuntu24.04 -t strata:ada .
 ```

@@ -12,7 +12,7 @@
 # engine/BUILD.json, which setup.py checks at start: a container start downloads
 # the model and serves, it never compiles.
 #
-#   docker build --build-arg STRATA_REF=v0.1.45 -t strata:sm80 .
+#   docker build --build-arg STRATA_REF=v0.2.5 -t strata:sm80 .
 #   docker build --build-arg CUDA_ARCHITECTURES=61 \
 #                --build-arg CUDA_BASE=12.9.1-devel-ubuntu24.04 -t strata:sm61 .
 #
@@ -23,7 +23,7 @@
 ARG CUDA_BASE=13.0.0-devel-ubuntu24.04
 FROM nvidia/cuda:${CUDA_BASE}
 
-ARG STRATA_REF=v0.1.45
+ARG STRATA_REF=v0.2.5
 ARG CUDA_ARCHITECTURES=80
 ARG BUILD_VISION=1
 
@@ -50,12 +50,14 @@ RUN git clone --branch "$STRATA_REF" --depth 1 \
 
 WORKDIR /opt/strata
 
-# cmake and ninja come from requirements.txt (pinned, into .venv), so no apt build
-# tools beyond the compiler are needed.
+# cmake and ninja come from requirements-build.txt (pinned, into .venv; upstream's
+# Dockerfile does the same), so no apt build tools beyond the compiler are needed.
+# Older refs (before 0.2) kept them in requirements.txt instead.
 RUN python3 -m venv .venv \
     && .venv/bin/pip install --no-cache-dir --upgrade pip \
     && .venv/bin/pip install --no-cache-dir -r requirements.txt \
-    && chmod +x setup.sh docker-entrypoint.sh
+    && if [ -f requirements-build.txt ]; then .venv/bin/pip install --no-cache-dir -r requirements-build.txt; fi \
+    && chmod +x setup.sh
 
 COPY tools/docker_build.py tools/docker_build.py
 

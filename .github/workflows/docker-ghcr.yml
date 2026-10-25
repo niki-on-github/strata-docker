@@ -4,7 +4,7 @@ name: Build and publish Docker image
 # Niko1221/Strata's newest tag and pushes ghcr.io/<owner>/<repo> for BOTH
 # architectures - CMP 170HX / A100 (sm80, CUDA 13) and Tesla P40 / P100 (sm61,
 # Pascal, the experimental CUDA 12 engine) - each tagged <arch>-<upstream-tag>
-# (e.g. sm80-v0.1.45, sm61-v0.1.45) and <arch>-latest.  Both are built on every
+# (e.g. sm80-v0.2.5, sm61-v0.2.5) and <arch>-latest.  Both are built on every
 # run; the CUDA 12 base is what the sm61 image needs (CUDA 13 dropped Pascal).
 on:
   schedule:
@@ -24,9 +24,9 @@ permissions:
 
 env:
   UPSTREAM: Niko1221/Strata
-  # setup.py refuses an engine older than this (MIN_ENGINE) and "K-quant experts /
-  # MMQ prompt library" landed in v0.1.44, so nothing below it is worth publishing.
-  MIN_TAG: v0.1.45
+  # The newest upstream release this packaging is verified against.  Older tags
+  # (before 0.2) split their build requirements differently and are not published.
+  MIN_TAG: v0.2.5
 
 jobs:
   build:
